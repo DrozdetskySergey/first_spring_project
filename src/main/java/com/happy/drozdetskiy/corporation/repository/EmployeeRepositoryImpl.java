@@ -23,17 +23,23 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public void add(EmployeeRepositoryDTO employeeRepositoryDTO) {
+        Session session = sessionFactory.getCurrentSession();
 
+        session.save(EmployeeRepositoryUtils.convertToEmployee(employeeRepositoryDTO));
     }
 
     @Override
     public void remove(EmployeeRepositoryDTO employeeRepositoryDTO) {
+        Session session = sessionFactory.getCurrentSession();
 
+        session.delete(EmployeeRepositoryUtils.convertToEmployee(employeeRepositoryDTO));
     }
 
     @Override
     public void set(EmployeeRepositoryDTO employeeRepositoryDTO) {
+        Session session = sessionFactory.getCurrentSession();
 
+        session.update(EmployeeRepositoryUtils.convertToEmployee(employeeRepositoryDTO));
     }
 
     @Override

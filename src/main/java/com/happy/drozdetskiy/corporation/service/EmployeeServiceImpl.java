@@ -43,7 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public EmployeeControllerDTO getById(int id) {
-        List<EmployeeRepositoryDTO> list = employeeRepository.query(e -> e.getId() == id);
+        List<EmployeeRepositoryDTO> list = employeeRepository.query(e -> e.id == id);
 
         return list.size() == 0 ? null : EmployeeServiceUtils.convertToEmployeeControllerDTO(list.get(0));
     }

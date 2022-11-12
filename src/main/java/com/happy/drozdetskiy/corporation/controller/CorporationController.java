@@ -5,7 +5,9 @@ import com.happy.drozdetskiy.corporation.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ public class CorporationController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping(value = "/")
+    @RequestMapping("/")
     public String showAllEmployees(Model model) {
         List<EmployeeControllerDTO> employees = employeeService.getAll();
 
@@ -28,8 +30,43 @@ public class CorporationController {
         return "all-employees";
     }
 
-    @GetMapping(value = "/edit")
-    public String editEmployee() {
-        return "edit";
+    @RequestMapping("/addNewEmployee")
+    public String addNewEmployee(Model model) {
+        EmployeeControllerDTO employeeControllerDTO = new EmployeeControllerDTO();
+
+        model.addAttribute("employee", employeeControllerDTO);
+
+        return "employee-info";
+    }
+
+    @RequestMapping("/saveEmployee")
+    public String saveEmployee(@ModelAttribute("employee") EmployeeControllerDTO employeeControllerDTO) {
+        if (employeeControllerDTO.id == 0) {
+            employeeService.add(employeeControllerDTO);
+        } else {
+            employeeService.edit(employeeControllerDTO);
+        }
+
+        return "redirect:/";
+    }
+
+    @RequestMapping("/editEmployee")
+    public String editEmployee(@RequestParam("employeeId") int id, Model model) {
+        EmployeeControllerDTO employeeControllerDTO = employeeService.getById(id);
+
+        model.addAttribute("employee", employeeControllerDTO);
+
+        return "employee-info";
+    }
+
+    @RequestMapping("/deleteEmployee")
+    public String deleteEmployee(@RequestParam("employeeId") int id) {
+        EmployeeControllerDTO employeeControllerDTO = employeeService.getById(id); //TODO
+
+        if (employeeControllerDTO != null) {
+            employeeService.delete(employeeControllerDTO);
+        }
+
+        return "redirect:/";
     }
 }
