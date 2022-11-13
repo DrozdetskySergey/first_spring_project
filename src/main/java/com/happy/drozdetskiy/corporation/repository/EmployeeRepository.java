@@ -4,13 +4,17 @@ import com.happy.drozdetskiy.corporation.repository.DTO.EmployeeRepositoryDTO;
 
 import java.util.List;
 
-public interface EmployeeRepository {
+public interface EmployeeRepository extends Repository<EmployeeRepositoryDTO> {
 
+    @Override
     void add(EmployeeRepositoryDTO employeeRepositoryDTO);
 
+    @Override
     void remove(EmployeeRepositoryDTO employeeRepositoryDTO);
 
+    @Override
     void set(EmployeeRepositoryDTO employeeRepositoryDTO);
 
-    List<EmployeeRepositoryDTO> query(EmployeeSpecification specification);
+    @Override
+    List<EmployeeRepositoryDTO> query(Specification<EmployeeRepositoryDTO> specification);
 }

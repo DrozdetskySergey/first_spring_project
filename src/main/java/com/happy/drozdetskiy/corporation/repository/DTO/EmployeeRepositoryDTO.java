@@ -1,6 +1,6 @@
 package com.happy.drozdetskiy.corporation.repository.DTO;
 
-public class EmployeeRepositoryDTO {
+public class EmployeeRepositoryDTO implements RepositoryDTO {
 
     public int id;
     public String name;

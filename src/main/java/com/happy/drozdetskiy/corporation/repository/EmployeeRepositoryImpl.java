@@ -43,7 +43,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     }
 
     @Override
-    public List<EmployeeRepositoryDTO> query(EmployeeSpecification specification) {
+    public List<EmployeeRepositoryDTO> query(Specification<EmployeeRepositoryDTO> specification) {
         Session session = sessionFactory.getCurrentSession();
 
         List<Employee> employees = session.createQuery("from Employee", Employee.class).getResultList();

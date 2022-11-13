@@ -1,6 +1,6 @@
 package com.happy.drozdetskiy.corporation.controller.DTO;
 
-public class EmployeeControllerDTO {
+public class EmployeeControllerDTO implements ControllerDTO {
 
     public int id;
     public String name;

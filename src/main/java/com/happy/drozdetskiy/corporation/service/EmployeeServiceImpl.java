@@ -3,9 +3,10 @@ package com.happy.drozdetskiy.corporation.service;
 import com.happy.drozdetskiy.corporation.controller.DTO.EmployeeControllerDTO;
 import com.happy.drozdetskiy.corporation.repository.DTO.EmployeeRepositoryDTO;
 import com.happy.drozdetskiy.corporation.repository.EmployeeRepository;
-import com.happy.drozdetskiy.corporation.repository.EmployeeSpecification;
+import com.happy.drozdetskiy.corporation.repository.Specification;
 import com.happy.drozdetskiy.corporation.service.utils.EmployeeServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+    public EmployeeServiceImpl(@Qualifier("employeeRepositoryImpl") EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
@@ -42,6 +43,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
+    public List<EmployeeControllerDTO> getAll() {
+        return employeeRepository.query(e -> true).stream()
+                .map(EmployeeServiceUtils::convertToEmployeeControllerDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
     public EmployeeControllerDTO getById(int id) {
         List<EmployeeRepositoryDTO> list = employeeRepository.query(e -> e.id == id);
 
@@ -50,16 +59,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public List<EmployeeControllerDTO> getAllByPredicate(EmployeeSpecification specification) {
+    public List<EmployeeControllerDTO> getAllByPredicate(Specification<EmployeeRepositoryDTO> specification) {
         return employeeRepository.query(specification).stream()
-                .map(EmployeeServiceUtils::convertToEmployeeControllerDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional
-    public List<EmployeeControllerDTO> getAll() {
-        return employeeRepository.query(e -> true).stream()
                 .map(EmployeeServiceUtils::convertToEmployeeControllerDTO)
                 .collect(Collectors.toList());
     }
