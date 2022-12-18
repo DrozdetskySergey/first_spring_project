@@ -1,12 +1,14 @@
-package com.happy.drozdetskiy.corporation.controller.DTO;
+package com.happy.drozdetskiy.corporation.DTO.employee;
+
+import com.happy.drozdetskiy.corporation.DTO.ControllerDTO;
 
 public class EmployeeControllerDTO implements ControllerDTO {
 
-    public int id;
-    public String name;
-    public String surname;
-    public String department;
-    public int salary;
+    private int id;
+    private String name;
+    private String surname;
+    private String department;
+    private int salary;
 
     public int getId() {
         return id;

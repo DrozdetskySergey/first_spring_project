@@ -1,7 +1,8 @@
 package com.happy.drozdetskiy.corporation.controller;
 
-import com.happy.drozdetskiy.corporation.controller.DTO.EmployeeControllerDTO;
-import com.happy.drozdetskiy.corporation.service.EmployeeService;
+import com.happy.drozdetskiy.corporation.DTO.employee.EmployeeControllerDTO;
+import com.happy.drozdetskiy.corporation.mapper.employee.EmployeeRepositoryMapper;
+import com.happy.drozdetskiy.corporation.service.employee.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -16,10 +17,12 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final EmployeeRepositoryMapper employeeRepositoryMapper;
 
     @Autowired
-    public EmployeeController(@Qualifier("employeeServiceImpl") EmployeeService employeeService) {
+    public EmployeeController(@Qualifier("employeeServiceImpl") EmployeeService employeeService, EmployeeRepositoryMapper employeeRepositoryMapper) {
         this.employeeService = employeeService;
+        this.employeeRepositoryMapper = employeeRepositoryMapper;
     }
 
     @RequestMapping("/")
@@ -42,7 +45,7 @@ public class EmployeeController {
 
     @RequestMapping("/saveEmployee")
     public String saveEmployee(@ModelAttribute("employee") EmployeeControllerDTO employeeControllerDTO) {
-        if (employeeControllerDTO.id == 0) {
+        if (employeeControllerDTO.getId() == 0) {
             employeeService.add(employeeControllerDTO);
         } else {
             employeeService.edit(employeeControllerDTO);

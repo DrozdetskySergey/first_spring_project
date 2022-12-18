@@ -1,6 +1,6 @@
 package com.happy.drozdetskiy.corporation.service;
 
-import com.happy.drozdetskiy.corporation.controller.DTO.ControllerDTO;
+import com.happy.drozdetskiy.corporation.DTO.ControllerDTO;
 
 import java.util.List;
 

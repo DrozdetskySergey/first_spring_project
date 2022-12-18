@@ -1,6 +1,6 @@
 package com.happy.drozdetskiy.corporation.repository;
 
-import com.happy.drozdetskiy.corporation.repository.DTO.RepositoryDTO;
+import com.happy.drozdetskiy.corporation.DTO.RepositoryDTO;
 
 public interface Specification<T extends RepositoryDTO> {
 
