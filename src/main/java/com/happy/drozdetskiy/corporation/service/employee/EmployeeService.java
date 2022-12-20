@@ -6,6 +6,7 @@ import com.happy.drozdetskiy.corporation.repository.Specification;
 import com.happy.drozdetskiy.corporation.service.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EmployeeService extends Service<EmployeeControllerDTO> {
 
@@ -21,7 +22,7 @@ public interface EmployeeService extends Service<EmployeeControllerDTO> {
     @Override
     List<EmployeeControllerDTO> getAll();
 
-    EmployeeControllerDTO getById(int id);
+    Optional<EmployeeControllerDTO> getById(int id);
 
     List<EmployeeControllerDTO> getAllByPredicate(Specification<EmployeeRepositoryDTO> specification);
 }

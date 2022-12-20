@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface EmployeeRepositoryMapper {
 
-    EmployeeRepositoryDTO toRepositoryDTO(Employee employee);
+    EmployeeRepositoryDTO toEmployeeRepositoryDTO(Employee employee);
 
     Employee toEmployee(EmployeeRepositoryDTO employeeRepositoryDTO);
 }

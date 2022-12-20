@@ -7,64 +7,64 @@ import com.happy.drozdetskiy.corporation.repository.Specification;
 import com.happy.drozdetskiy.corporation.repository.employee.EmployeeRepository;
 import com.happy.drozdetskiy.corporation.service.employee.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final EmployeeRepository employeeRepository;
-    private final EmployeeServiceMapper employeeServiceMapper; // generated with Mapstruct
+    private final EmployeeRepository repository;
+    private final EmployeeServiceMapper mapper;
 
     @Autowired
-    public EmployeeServiceImpl(@Qualifier("employeeRepositoryImpl") EmployeeRepository employeeRepository, EmployeeServiceMapper employeeServiceMapper) {
-        this.employeeRepository = employeeRepository;
-        this.employeeServiceMapper = employeeServiceMapper;
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository, EmployeeServiceMapper employeeServiceMapper) {
+        this.repository = employeeRepository;
+        this.mapper = employeeServiceMapper;
     }
 
     @Override
     @Transactional
     public void add(EmployeeControllerDTO employeeControllerDTO) {
-        employeeRepository.add(employeeServiceMapper.toRepositoryDTO(employeeControllerDTO));
+        repository.add(mapper.toEmployeeRepositoryDTO(employeeControllerDTO));
     }
 
     @Override
     @Transactional
     public void delete(EmployeeControllerDTO employeeControllerDTO) {
-        employeeRepository.remove(employeeServiceMapper.toRepositoryDTO(employeeControllerDTO));
+        repository.remove(mapper.toEmployeeRepositoryDTO(employeeControllerDTO));
     }
 
     @Override
     @Transactional
     public void edit(EmployeeControllerDTO employeeControllerDTO) {
-        employeeRepository.set(employeeServiceMapper.toRepositoryDTO(employeeControllerDTO));
+        repository.set(mapper.toEmployeeRepositoryDTO(employeeControllerDTO));
     }
 
     @Override
     @Transactional
     public List<EmployeeControllerDTO> getAll() {
-        return employeeRepository.query(e -> true).stream()
-                .map(employeeServiceMapper::toControllerDTO)
+        return repository.query(e -> true).stream()
+                .map(mapper::toEmployeeControllerDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public EmployeeControllerDTO getById(int id) {
-        List<EmployeeRepositoryDTO> list = employeeRepository.query(e -> e.getId() == id);
-
-        return list.size() == 0 ? null : employeeServiceMapper.toControllerDTO(list.get(0));
+    public Optional<EmployeeControllerDTO> getById(int id) {
+        return repository.query(e -> e.getId() == id).stream()
+                .map(mapper::toEmployeeControllerDTO)
+                .findFirst();
     }
 
     @Override
     @Transactional
     public List<EmployeeControllerDTO> getAllByPredicate(Specification<EmployeeRepositoryDTO> specification) {
-        return employeeRepository.query(specification).stream()
-                .map(employeeServiceMapper::toControllerDTO)
+        return repository.query(specification).stream()
+                .map(mapper::toEmployeeControllerDTO)
                 .collect(Collectors.toList());
     }
 }

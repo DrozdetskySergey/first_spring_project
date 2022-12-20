@@ -1,10 +1,8 @@
 package com.happy.drozdetskiy.corporation.controller;
 
 import com.happy.drozdetskiy.corporation.DTO.employee.EmployeeControllerDTO;
-import com.happy.drozdetskiy.corporation.mapper.employee.EmployeeRepositoryMapper;
 import com.happy.drozdetskiy.corporation.service.employee.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,22 +10,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class EmployeeController {
 
-    private final EmployeeService employeeService;
-    private final EmployeeRepositoryMapper employeeRepositoryMapper;
+    private final EmployeeService service;
 
     @Autowired
-    public EmployeeController(@Qualifier("employeeServiceImpl") EmployeeService employeeService, EmployeeRepositoryMapper employeeRepositoryMapper) {
-        this.employeeService = employeeService;
-        this.employeeRepositoryMapper = employeeRepositoryMapper;
+    public EmployeeController(EmployeeService service) {
+        this.service = service;
     }
 
     @RequestMapping("/")
     public String showAllEmployees(Model model) {
-        List<EmployeeControllerDTO> employees = employeeService.getAll();
+        List<EmployeeControllerDTO> employees = service.getAll();
 
         model.addAttribute("allEmployees", employees);
 
@@ -46,9 +43,9 @@ public class EmployeeController {
     @RequestMapping("/saveEmployee")
     public String saveEmployee(@ModelAttribute("employee") EmployeeControllerDTO employeeControllerDTO) {
         if (employeeControllerDTO.getId() == 0) {
-            employeeService.add(employeeControllerDTO);
+            service.add(employeeControllerDTO);
         } else {
-            employeeService.edit(employeeControllerDTO);
+            service.edit(employeeControllerDTO);
         }
 
         return "redirect:/";
@@ -56,20 +53,20 @@ public class EmployeeController {
 
     @RequestMapping("/editEmployee")
     public String editEmployee(@RequestParam("employeeId") int id, Model model) {
-        EmployeeControllerDTO employeeControllerDTO = employeeService.getById(id);
+        Optional<EmployeeControllerDTO> optional = service.getById(id);
 
-        model.addAttribute("employee", employeeControllerDTO);
+        if (optional.isPresent()) {
+            model.addAttribute("employee", optional.get());
 
-        return "employee-info";
+            return "employee-info";
+        }
+
+        return "redirect:/";
     }
 
     @RequestMapping("/deleteEmployee")
     public String deleteEmployee(@RequestParam("employeeId") int id) {
-        EmployeeControllerDTO employeeControllerDTO = employeeService.getById(id); //TODO
-
-        if (employeeControllerDTO != null) {
-            employeeService.delete(employeeControllerDTO);
-        }
+        service.getById(id).ifPresent(service::delete);
 
         return "redirect:/";
     }

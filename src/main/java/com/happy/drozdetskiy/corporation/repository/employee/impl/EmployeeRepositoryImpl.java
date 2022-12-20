@@ -17,33 +17,33 @@ import java.util.stream.Collectors;
 public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     private final SessionFactory sessionFactory;
-    private final EmployeeRepositoryMapper employeeRepositoryMapper; // generated with Mapstruct
+    private final EmployeeRepositoryMapper mapper;
 
     @Autowired
     public EmployeeRepositoryImpl(SessionFactory sessionFactory, EmployeeRepositoryMapper employeeRepositoryMapper) {
         this.sessionFactory = sessionFactory;
-        this.employeeRepositoryMapper = employeeRepositoryMapper;
+        this.mapper = employeeRepositoryMapper;
     }
 
     @Override
     public void add(EmployeeRepositoryDTO employeeRepositoryDTO) {
         Session session = sessionFactory.getCurrentSession();
 
-        session.save(employeeRepositoryMapper.toEmployee(employeeRepositoryDTO));
+        session.save(mapper.toEmployee(employeeRepositoryDTO));
     }
 
     @Override
     public void remove(EmployeeRepositoryDTO employeeRepositoryDTO) {
         Session session = sessionFactory.getCurrentSession();
 
-        session.delete(employeeRepositoryMapper.toEmployee(employeeRepositoryDTO));
+        session.delete(mapper.toEmployee(employeeRepositoryDTO));
     }
 
     @Override
     public void set(EmployeeRepositoryDTO employeeRepositoryDTO) {
         Session session = sessionFactory.getCurrentSession();
 
-        session.update(employeeRepositoryMapper.toEmployee(employeeRepositoryDTO));
+        session.update(mapper.toEmployee(employeeRepositoryDTO));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         List<Employee> employees = session.createQuery("from Employee", Employee.class).getResultList();
 
         return employees.stream()
-                .map(employeeRepositoryMapper::toRepositoryDTO)
+                .map(mapper::toEmployeeRepositoryDTO)
                 .filter(specification::specified)
                 .collect(Collectors.toList());
     }
